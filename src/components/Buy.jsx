@@ -8,6 +8,11 @@ import Marquee from "react-fast-marquee";
 export const Buy = ({ id }) => {
     const { state, dispatch } = useContext(Context);
 
+    // Sahifa yuklanganda tepaga scroll qilish
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     // Faqat mahsulotni olish
     useEffect(() => {
         GetSingleProduct(id, dispatch);
@@ -58,7 +63,6 @@ export const Buy = ({ id }) => {
                 </div>
             </div>
             <h1 className="font-normal text-xl sm:text-2xl md:text-3xl lg:text-4xl pl-4 sm:pl-6 md:pl-10 lg:pl-[100px]">You may also like</h1>
-
 
             <Marquee speed={50} pauseOnHover={true} className="gap-[20px] px-[20px] py-10">
                 {state?.products?.map((item) => (
