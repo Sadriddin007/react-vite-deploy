@@ -27,7 +27,6 @@ function App() {
 
 
   return (
-
     <>
       <Routes>
         <Route path='/register' element={<Register />} />
@@ -35,9 +34,9 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/productinfo/:id' element={<ProductInfo />} />
         <Route path='/card' element={<Card />} />
-        <Route path='/product'element={<Product/>} />
-        <Route path='/About' element={<About/>}/>
-        <Route path='/contact' element={<ContactForm/>} />
+        <Route path='/product' element={<Product />} />
+        <Route path='/About' element={<About />} />
+        <Route path='/contact' element={<ContactForm />} />
         {/* <Route path='*' element={<NotFound />} /> */}
         {/* <Route path="/product/:id" element={<Product />} /> */}
       </Routes>

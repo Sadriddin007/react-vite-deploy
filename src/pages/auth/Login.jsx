@@ -1,12 +1,16 @@
 import { useContext } from "react";
 import { Context } from "../../api/store/store";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LoginAction } from "../../api/action/action";
 
 export const Login = () => {
-    const { state, dispatch } = useContext(Context)
-    const navigate = useNavigate()
+    const { state, dispatch } = useContext(Context);
+    const navigate = useNavigate();
+
+    const handleRegisterRedirect = () => {
+        navigate('/register', { replace: true }); // 🔁 tarixni almashtiradi
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -61,9 +65,9 @@ export const Login = () => {
 
                 <p className="text-sm text-center text-gray-500">
                     Don't have an account?{" "}
-                    <a href="/register" className="text-blue-600 hover:underline">
+                    <button onClick={handleRegisterRedirect} className="text-blue-600 hover:underline">
                         Register
-                    </a>
+                    </button>
                 </p>
             </form>
         </div>

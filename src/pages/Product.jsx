@@ -6,7 +6,7 @@ export const Product = () => {
     return (
         <div>
             <Nav />
-            <Header/>
+            <div className="mt-[90px]"><Header /></div>
             <Footer />
         </div>
     );

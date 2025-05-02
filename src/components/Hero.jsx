@@ -6,7 +6,7 @@ export const Hero = () => {
                 alt="Hero background"
                 className="w-full rounded-2xl object-cover max-h-[500px] md:max-h-[600px]"
             />
-            <div className="absolute inset-0 flex items-center justify-start mx-[16px] bg-black bg-opacity-40 rounded-2xl px-4 sm:px-8 md:px-16">
+            <div className="hidden md:flex absolute inset-0 items-center justify-start mx-[16px] bg-black bg-opacity-40 rounded-2xl px-4 sm:px-8 md:px-16">
                 <div className="text-white max-w-[90%] sm:max-w-[70%] lg:max-w-[50%]">
                     <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
                         New Season Arrivals

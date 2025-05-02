@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { FaUser, FaUserPlus, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router'; 
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // ✅ to'g'rilandi
 import { Context } from '../api/store/store';
 
 export const Nav = () => {
@@ -8,19 +8,38 @@ export const Nav = () => {
     const { state, dispatch } = useContext(Context);
     const [token, setToken] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const logoutHandler = () => {
+        localStorage.removeItem('token');
+        setToken(null);
+        navigate('/');
     };
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         setToken(storedToken);
 
-        if (!storedToken) {
-            navigate('/register'); // token yo'q bo'lsa register sahifasiga redirect
+        // Faqat protected sahifalarda token yo'q bo'lsa, home pagega yo'naltiramiz
+        const protectedPaths = ['/', '/card'];
+        const isProtected = protectedPaths.includes(location.pathname);
+
+        if (!storedToken && isProtected) {
+            navigate('/'); // ✅ login yoki register emas, home pagega yo‘naltiradi
         }
-    }, [navigate]);
+    }, [navigate, location.pathname]);
+
+    const handleCartClick = () => {
+        if (!token) {
+            navigate('/login'); // Token yo'q bo'lsa, login sahifasiga yo'naltiramiz
+        } else {
+            navigate('/card'); // Token mavjud bo'lsa, cart sahifasiga o'tadi
+        }
+    };
 
     return (
         <nav className="fixed top-0 left-0 w-full bg-gray-50 z-50 flex items-center justify-between px-6 md:px-[101px] py-4 shadow">
@@ -39,8 +58,16 @@ export const Nav = () => {
 
             <div className="hidden md:flex items-center space-x-4">
                 {token ? (
-                    <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-xl">
-                        <FaUser />
+                    <div className="flex items-center space-x-2">
+                        <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-xl">
+                            <FaUser />
+                        </div>
+                        <button
+                            onClick={logoutHandler}
+                            className="px-3 py-2 border rounded-md hover:bg-gray-100 text-sm"
+                        >
+                            Log Out
+                        </button>
                     </div>
                 ) : (
                     <>
@@ -52,9 +79,12 @@ export const Nav = () => {
                         </Link>
                     </>
                 )}
-                <Link to="/card" className="flex items-center px-3 py-2 border rounded-md hover:bg-gray-100">
+                <button
+                    onClick={handleCartClick}
+                    className="flex items-center px-3 py-2 border rounded-md hover:bg-gray-100"
+                >
                     <FaShoppingCart className="mr-2" /> Cart <span className="ml-1">{state?.cart.length}</span>
-                </Link>
+                </button>
             </div>
 
             {isMenuOpen && (
@@ -65,11 +95,22 @@ export const Nav = () => {
                     <Link to="/contact" className="hover:text-black w-full" onClick={toggleMenu}>Contact</Link>
 
                     {token ? (
-                        <div className="flex items-center w-full" onClick={toggleMenu}>
-                            <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-xl">
-                                <FaUser />
+                        <>
+                            <div className="flex items-center w-full">
+                                <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-xl">
+                                    <FaUser />
+                                </div>
                             </div>
-                        </div>
+                            <button
+                                onClick={() => {
+                                    toggleMenu();
+                                    logoutHandler();
+                                }}
+                                className="text-left w-full px-3 py-2 border rounded-md hover:bg-gray-100"
+                            >
+                                Log Out
+                            </button>
+                        </>
                     ) : (
                         <>
                             <Link to="/login" className="flex items-center w-full" onClick={toggleMenu}>
@@ -81,9 +122,12 @@ export const Nav = () => {
                         </>
                     )}
 
-                    <Link to="/card" className="flex items-center w-full" onClick={toggleMenu}>
+                    <button
+                        onClick={handleCartClick}
+                        className="flex items-center w-full"
+                    >
                         <FaShoppingCart className="mr-2" /> Cart <span className="ml-1">{state?.cart.length}</span>
-                    </Link>
+                    </button>
                 </div>
             )}
         </nav>

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from './../api/store/store';
 import { AddToCart, FilterProductsByCategory, GetAllProducts } from "../api/action/action";
 import { DataLoading } from "./DataLoading";
-import { Link, useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const Header = () => {
@@ -26,19 +26,20 @@ export const Header = () => {
         setSelectedCategory(category);
         FilterProductsByCategory(category, dispatch);
     };
+
     const handleAddToCart = (item) => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            toast.error("Iltimos, avval tizimga kiring!"); 
-            navigate("/login"); 
-        } else {
-            AddToCart(item, toast, dispatch); 
-        }
+        // Token bo'lishidan qat'iy nazar mahsulotni qo'shish
+        AddToCart(item, toast, dispatch);
+    };
+
+    const handleBuyNow = (id) => {
+        // Token bo'lishidan qat'iy nazar sahifaga o'tkazish
+        navigate(`/productinfo/${id}`);
     };
 
     return (
         <div>
-            <div className="px-4 md:px-[100px] text-center mt-[90px]">
+            <div className="px-4 md:px-[100px] text-center">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold py-5">Latest Products</h1>
                 <hr className="my-4" />
             </div>
@@ -62,7 +63,9 @@ export const Header = () => {
                     </button>
                 </div>
             </div>
+
             {state.isLoading && <DataLoading />}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-[20px] md:px-[50px] lg:px-[100px]">
                 {state?.products?.map((item) => (
                     <div key={item?.id}>
@@ -80,14 +83,14 @@ export const Header = () => {
                                 {item?.description}
                             </p>
                             <div className="flex flex-wrap gap-4 justify-between">
-                                <Link
-                                    to={`/productinfo/${item?.id}`}
+                                <button
+                                    onClick={() => handleBuyNow(item?.id)}
                                     className="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 min-w-[130px]"
                                 >
                                     Buy Now
-                                </Link>
+                                </button>
                                 <button
-                                    onClick={() => handleAddToCart(item)} // 🔥 token tekshiruvchi funksiya
+                                    onClick={() => handleAddToCart(item)}
                                     className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 min-w-[130px]"
                                 >
                                     Add to Cart
